@@ -1,10 +1,11 @@
 from pydantic_settings import BaseSettings
+import os
+from dotenv import load_dotenv
+
 
 class Settings(BaseSettings):
-    GROQ_API_KEY: str
-
-    class Config:
-        env_file = ".env"
+    load_dotenv()
+    GROQ_API_KEY: str = os.environ.get("GROQ_API_KEY", "")
     
     GROQ_MODELS: dict[str, str] = {
         "llama-3.1-8b - Fast": "llama-3.1-8b-instant",
