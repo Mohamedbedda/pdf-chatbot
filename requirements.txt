@@ -21,15 +21,21 @@
 
 
 
-gradio==5.23.0
-groq
-faiss-cpu==1.8.0
-rank_bm25
-langchain
-langchain-huggingface
-pymupdf
-FlagEmbedding==1.2.11
-sentence-transformers
-numpy
+gradio==6.10.0
+groq==1.1.2
+faiss-cpu==1.13.2
+rank-bm25==0.2.2
+langchain==1.2.13
+langchain-huggingface==1.2.1
+langchain-text-splitters==1.1.1
+langchain-community==0.4.1
+langchain-core==1.2.22
+pymupdf==1.27.2.2
+FlagEmbedding>=1.2.1
+sentence-transformers==5.1.0
+numpy==2.2.6
 python-dotenv
-pydantic-settings
+pydantic-settings==2.13.1
+transformers>=4.46.0
+torch==2.11.0
+
