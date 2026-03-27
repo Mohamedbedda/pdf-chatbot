@@ -21,7 +21,6 @@
 
 
 
-gradio==6.10.0
 groq==1.1.2
 faiss-cpu==1.13.2
 rank-bm25==0.2.2
