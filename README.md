@@ -77,7 +77,7 @@ takes each **(query, chunk) pair together**, letting every query token attend to
 every chunk token — producing a much deeper relevance score.
 
 `compute_score(pairs, normalize=True)` applies a sigmoid to map scores to `[0, 1]`.
-If even the best chunk scores below `RERANK_THRESHOLD (0.7)`, the system
+If even the best chunk scores below `RERANK_THRESHOLD (0.5)`, the system
 returns `None` and the LLM will not generate a hallucinated answer.
 
 ---
