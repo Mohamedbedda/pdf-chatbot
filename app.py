@@ -29,13 +29,15 @@ def upload_pdf(pdf_file):
     return "PDF loaded successfully !"
 
 
-def chat_with_pdf(message, model_key):
+def chat_with_pdf(message, history, model_key):
     """
     Triggered when user submits a question.
     Runs full RAG pipeline and returns the answer.
     """
     if not state.pdf_loaded:
-        return "Please upload a PDF first."
+        # return "Please upload a PDF first."
+        history.append({"role": "assistant", "content": "⚠️ Please upload a PDF first."})
+        return "", history
 
     contexts = retrieve(message, state.chunks, state.index, state.bm25)
 
@@ -44,7 +46,10 @@ def chat_with_pdf(message, model_key):
     else:
         answer = generate_answer(message, contexts, model_key)
 
-    return answer
+    history.append({"role": "user", "content": message})
+    history.append({"role": "assistant", "content": answer})
+
+    return "", history
 
 # UI
 with gr.Blocks(title="PDF RAG Chatbot") as demo:
@@ -57,30 +62,30 @@ with gr.Blocks(title="PDF RAG Chatbot") as demo:
             file_types=[".pdf"],
             file_count="single",
         )
-        model_dropdown = gr.Dropdown(
-            choices=list(settings.GROQ_MODELS.keys()),
-            value=list(settings.GROQ_MODELS.keys())[0],
-            label="Model",
-            interactive=True,
-        )
+    
+        with gr.Column():
+            status = gr.Textbox(
+                label="Status",
+                interactive=False,
+                placeholder="Upload a PDF to get started...",
+            )
+            
+            model_dropdown = gr.Dropdown(
+                choices=list(settings.GROQ_MODELS.keys()),
+                value=list(settings.GROQ_MODELS.keys())[0],
+                label="Model",
+                interactive=True,
+            )
 
-    status = gr.Textbox(
-        label="Status",
-        interactive=False,
-        placeholder="Upload a PDF to get started...",
-    )
+            
 
+    
+    chatbot = gr.Chatbot(label="Chat", value=[])
+    
     msg = gr.Textbox(
         label="Your question",
         placeholder="Ask something about the PDF...",
     )
-
-    answer_output = gr.Textbox(
-        label="Answer",
-        interactive=False,
-        placeholder="Answer...",
-    )
-
 
     # Events
     pdf_input.upload(
@@ -89,12 +94,11 @@ with gr.Blocks(title="PDF RAG Chatbot") as demo:
         outputs=status,
     )
 
-    msg.submit(
-        fn=chat_with_pdf,
-        inputs=[msg, model_dropdown],
-        outputs=answer_output,
+    msg.submit(fn=chat_with_pdf, 
+        inputs=[msg, chatbot, 
+        model_dropdown], 
+        outputs=[msg, chatbot]
     )
-
 
 if __name__ == "__main__":
     demo.queue().launch(share=True)

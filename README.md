@@ -13,7 +13,7 @@ Built with **Python · Gradio · Groq · FAISS · BM25 · BGE Reranker**
 - 📤 Upload any PDF and chat with it instantly
 - 🔍 Hybrid retrieval: semantic (FAISS) + keyword (BM25 Okapi)
 - 🎯 Cross-encoder reranking for precision (BGE FlagReranker)
-- 🤖 5 selectable Groq LLM models
+- 🤖 4 selectable Groq LLM models
 - 💬 Persistent chat history per session
 - 🔒 Hallucination-safe: returns no answer when context is insufficient
 
@@ -22,20 +22,20 @@ Built with **Python · Gradio · Groq · FAISS · BM25 · BGE Reranker**
 ## 🔄 Retrieval Pipeline
 
 ```
-User Query
-    │
-    ▼
+                User Query
+                    │
+                    ▼
 ┌─────────────────────────────────────────────┐
 │  STAGE 1 — FAISS                            │
 │  Embed query → cosine similarity search     │
-│  Output: TOP_K = 10 candidates              │
-└──────────────────┬──────────────────────────┘
-                   │
-                   ▼
+│  Output: TOP_K = 10 similar chunks              │
+└────────────────────────────────────────────┘
+                    │
+                    ▼
 ┌─────────────────────────────────────────────┐
 │  STAGE 2 — HYBRID BLEND                     │
 │  hybrid = 0.7 × FAISS + 0.3 × BM25_norm    │
-│  Output: top 7 candidates                   │
+│  Output: top 7 chunks                   │
 └──────────────────┬──────────────────────────┘
                    │
                    ▼
@@ -47,7 +47,7 @@ User Query
 └──────────────────┬──────────────────────────┘
                    │
                    ▼
-          Groq LLM → Answer
+            Groq LLM → Answer
 ```
 
 ---
@@ -77,7 +77,7 @@ takes each **(query, chunk) pair together**, letting every query token attend to
 every chunk token — producing a much deeper relevance score.
 
 `compute_score(pairs, normalize=True)` applies a sigmoid to map scores to `[0, 1]`.
-If even the best chunk scores below `RERANK_THRESHOLD = 0.5`, the system
+If even the best chunk scores below `RERANK_THRESHOLD (0.7)`, the system
 returns `None` and the LLM will not generate a hallucinated answer.
 
 ---
@@ -106,7 +106,7 @@ TOP_K: int = 10                  # FAISS retrieves 10 candidates
 RERANK_TOP_K: int = 5            # FlagReranker re-scores top 5
 FINAL_CONTEXT_K: int = 3         # Best 3 chunks passed to LLM
 MAX_TOKENS: int = 500            # LLM max output length
-RERANK_THRESHOLD: float = 0.5   # Minimum rerank score to return an answer
+RERANK_THRESHOLD: float = 0.7   # Minimum rerank score to return an answer
 ```
 
 ---
@@ -119,7 +119,6 @@ RERANK_THRESHOLD: float = 0.5   # Minimum rerank score to return an answer
 | `gpt-oss-20b` | `openai/gpt-oss-20b` | 🧠 Reasoning · MoE architecture · agentic tasks |
 | `kimi-k2` | `moonshotai/kimi-k2-instruct` | 🔀 High throughput · long context |
 | `qwen3-32b` | `qwen/qwen3-32b` | ⚡ Strong reasoning · fast inference |
-| `llama-3.3-70b` | `llama-3.3-70b-versatile` | 🎯 Best quality · 128K ctx · multilingual |
 
 All models share the same retrieval layer — only generation varies.
 

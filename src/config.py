@@ -11,14 +11,13 @@ class Settings(BaseSettings):
         "gpt-oss-20b - Reasoning": "openai/gpt-oss-20b",
         "kimi-k2 - High throughput": "moonshotai/kimi-k2-instruct",
         "qwen3-32b - Fast reasoning": "qwen/qwen3-32b",
-        "llama-3.3-70b - multilingual": "llama-3.3-70b-versatile",
     }
 
     CHUNK_SIZE: int = 512
     CHUNK_OVERLAP: int = 64
     TOP_K: int = 10
     RERANK_TOP_K: int = 7
-    RERANK_THRESHOLD: float = 0.7
+    RERANK_THRESHOLD: float = 0.5
     FINAL_CONTEXT_K: int = 3
     TEMPERATURE: float = 0.1
     MAX_OUTPUT_TOKENS: int = 500
