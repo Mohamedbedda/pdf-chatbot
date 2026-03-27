@@ -1,10 +1,7 @@
 from groq import Groq
 from src.config import settings
 
-
-# Single Groq client — instantiated once at module level
 _client = Groq(api_key=settings.GROQ_API_KEY)
-
 
 def generate_answer(question: str, contexts: list[dict], model_key: str) -> str:
     """
@@ -19,13 +16,13 @@ def generate_answer(question: str, contexts: list[dict], model_key: str) -> str:
         The LLM's answer as a string
     """
     if not contexts:
+        print("No contexts provided to generator.")
         return "Not found in the document!"
 
-    # Build context block from retrieved chunks
     context_text = "\n\n".join(c["chunk"] for c in contexts)
 
     prompt = f"""You are a helpful assistant answering ONLY from the given context.
-    If the answer is not present in the context, say exactly: "Not found in the document!".
+    If the answer is not present in the context, say "Not found in the document!".
     Do not use any external knowledge.
 
     Context:
@@ -34,14 +31,13 @@ def generate_answer(question: str, contexts: list[dict], model_key: str) -> str:
     Question: {question}
     Answer:"""
 
-    # Resolve display name → real Groq model ID
     model_id = settings.GROQ_MODELS[model_key]
 
     response = _client.chat.completions.create(
         model=model_id,
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.1,
-        max_tokens=500,
+        temperature=settings.TEMPERATURE,
+        max_tokens=settings.MAX_OUTPUT_TOKENS,
     )
 
     return response.choices[0].message.content.strip()

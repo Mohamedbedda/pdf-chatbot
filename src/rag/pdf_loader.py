@@ -1,6 +1,7 @@
 import re
-import fitz  # PyMuPDF
+import fitz
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from src.config import settings
 
 
 def extract_text_from_pdf(path: str) -> str:
@@ -14,9 +15,9 @@ def extract_text_from_pdf(path: str) -> str:
     return text
 
 
-def chunk_text(text: str, chunk_size: int = 512, chunk_overlap: int = 64) -> list[str]:
+def chunk_text(text: str) -> list[str]:
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
+        chunk_size=settings.CHUNK_SIZE,
+        chunk_overlap=settings.CHUNK_OVERLAP,
     )
     return splitter.split_text(text)

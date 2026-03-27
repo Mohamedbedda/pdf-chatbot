@@ -7,15 +7,20 @@ class Settings(BaseSettings):
         env_file = ".env"
     
     GROQ_MODELS: dict[str, str] = {
-        "llama-3.1-8b - Fast":         "llama-3.1-8b-instant",
-        "llama-4-scout - Long docs":    "meta-llama/llama-4-scout-17b-16e-instruct",
-        "llama-3.3-70b - Best quality": "llama-3.3-70b-versatile",
-        "kimi-k2 - High load":    "moonshotai/kimi-k2-instruct",
-        "qwen3-32b - Reasoning":    "qwen/qwen3-32b",
+        "llama-3.1-8b - Fast": "llama-3.1-8b-instant",
+        "gpt-oss-20b - Reasoning": "openai/gpt-oss-20b",
+        "kimi-k2 - High throughput": "moonshotai/kimi-k2-instruct",
+        "qwen3-32b - Fast reasoning": "qwen/qwen3-32b",
+        "llama-3.3-70b - multilingual": "llama-3.3-70b-versatile",
     }
-    RERANK_THRESHOLD: float = 0.5
+
+    CHUNK_SIZE: int = 512
+    CHUNK_OVERLAP: int = 64
     TOP_K: int = 10
-    RERANK_TOP_K: int = 5
+    RERANK_TOP_K: int = 7
+    RERANK_THRESHOLD: float = 0.7
     FINAL_CONTEXT_K: int = 3
+    TEMPERATURE: float = 0.1
+    MAX_OUTPUT_TOKENS: int = 500
 
 settings = Settings()
