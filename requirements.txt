@@ -32,3 +32,4 @@ FlagEmbedding==1.2.11
 sentence-transformers
 numpy
 python-dotenv
+pydantic-settings
