@@ -31,10 +31,9 @@ langchain-community==0.4.1
 langchain-core==1.2.22
 pymupdf==1.27.2.2
 FlagEmbedding>=1.2.1
-# sentence-transformers==5.1.0
+sentence-transformers==5.1.0
 numpy==2.2.6
 python-dotenv
 pydantic-settings==2.13.1
 transformers>=4.46.0
-torch==2.11.0
-
+torch>=2.4.0
