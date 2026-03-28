@@ -45,8 +45,7 @@ def chat_with_pdf(message, history, model_key):
     else:
         answer = generate_answer(message, contexts, model_key)
 
-    history.append({"role": "user", "content": message})
-    history.append({"role": "assistant", "content": answer})
+    history.append([message, answer])
 
     return "", history
 
