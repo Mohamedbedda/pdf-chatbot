@@ -13,20 +13,23 @@ def upload_pdf(pdf_file):
     Triggered when user uploads a PDF.
     Extracts text, builds indexes.
     """
-    if pdf_file is None:
-        return "Please upload a valid PDF."
+    try:
+        if pdf_file is None:
+            return "Please upload a valid PDF !"
 
-    text = extract_text_from_pdf(pdf_file.name)
-    chunks = chunk_text(text)
+        text = extract_text_from_pdf(pdf_file.name)
+        chunks = chunk_text(text)
+        index, bm25 = build_indexes(chunks)
 
-    index, bm25 = build_indexes(chunks)
-
-    state.chunks = chunks
-    state.index = index
-    state.bm25 = bm25
-    state.pdf_loaded = True
-
-    return "PDF loaded successfully !"
+        state.chunks = chunks
+        state.index = index
+        state.bm25 = bm25
+        state.pdf_loaded = True
+        print(f"PDF loaded with {len(chunks)} chunks indexed.")
+        return f"PDF loaded successfully"
+    
+    except ValueError as e:
+        return f"Error: {str(e)}"
 
 
 def chat_with_pdf(message, history, model_key):
@@ -34,10 +37,6 @@ def chat_with_pdf(message, history, model_key):
     Triggered when user submits a question.
     Runs full RAG pipeline and returns the answer.
     """
-    if not state.pdf_loaded:
-        # return "Please upload a PDF first."
-        history.append({"role": "assistant", "content": "⚠️ Please upload a PDF first."})
-        return "", history
 
     contexts = retrieve(message, state.chunks, state.index, state.bm25)
 

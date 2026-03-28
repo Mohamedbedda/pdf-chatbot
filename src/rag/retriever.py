@@ -21,7 +21,13 @@ def build_indexes(chunks: list[str]):
     Build FAISS (vector) + BM25 (keyword) indexes from chunks.
     Called once at PDF upload — not per question.
     """
+    if not chunks:
+        raise ValueError("No chunks provided for indexing !")
+    
     embeddings = np.array(_embedder.embed_documents(chunks), dtype="float32")
+    
+    if embeddings.size == 0 or embeddings.ndim != 2:
+        raise ValueError(f"Failed to generate embeddings, invalid shape: {embeddings.shape} !")
 
     index = faiss.IndexFlatIP(embeddings.shape[1])
     index.add(embeddings)
@@ -73,5 +79,3 @@ def retrieve(question: str, chunks: list[str], index, bm25) -> list[dict] | None
         return None 
     
     return top[:settings.FINAL_CONTEXT_K]
-
-

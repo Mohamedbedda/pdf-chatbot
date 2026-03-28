@@ -17,12 +17,12 @@ def generate_answer(question: str, contexts: list[dict], model_key: str) -> str:
     """
     if not contexts:
         print("No contexts provided to generator.")
-        return "Not found in the document!"
+        return "Not found in the document !"
 
     context_text = "\n\n".join(c["chunk"] for c in contexts)
 
     prompt = f"""You are a helpful assistant answering ONLY from the given context.
-    If the answer is not present in the context, say "Not found in the document!".
+    If the answer is not present in the context, say "Not found in the document !".
     Do not use any external knowledge.
 
     Context:
