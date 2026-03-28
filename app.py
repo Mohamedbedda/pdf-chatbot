@@ -38,7 +38,7 @@ def chat_with_pdf(message, history, model_key):
     Runs full RAG pipeline and returns the answer.
     """
     if not state.pdf_loaded or state.index is None:
-        answer = "Please upload a PDF first."
+        answer = "Please upload a PDF first !"
         history.append({"role": "user", "content": message})
         history.append({"role": "assistant", "content": answer})
         return "", history
@@ -46,7 +46,8 @@ def chat_with_pdf(message, history, model_key):
     contexts = retrieve(message, state.chunks, state.index, state.bm25)
 
     if contexts is None:
-        answer = "Not found in the document!"
+        print("No contexts found !")
+        answer = "Not found in the document !"
     else:
         answer = generate_answer(message, contexts, model_key)
 
@@ -60,7 +61,7 @@ with gr.Blocks(title="PDF RAG Chatbot") as demo:
     gr.Markdown("# PDF RAG Chatbot")
     gr.Markdown("Upload a PDF, choose a model, and start asking questions.")
 
-    with gr.Row():
+    with gr.Row(equal_height=True):
         pdf_input = gr.File(
             label="Upload PDF",
             file_types=[".pdf"],
@@ -86,10 +87,12 @@ with gr.Blocks(title="PDF RAG Chatbot") as demo:
     
     chatbot = gr.Chatbot(label="Chat", value=[])
     
-    msg = gr.Textbox(
-        label="Your question",
-        placeholder="Ask something about the PDF...",
-    )
+    with gr.Column():
+        msg = gr.Textbox(
+            show_label=False,
+            placeholder="Ask something about the PDF...",
+        )
+        submit_btn = gr.Button("Send")
 
     # Events
     pdf_input.upload(
@@ -98,9 +101,15 @@ with gr.Blocks(title="PDF RAG Chatbot") as demo:
         outputs=status,
     )
 
-    msg.submit(fn=chat_with_pdf, 
+    submit_btn.click(fn=chat_with_pdf, 
         inputs=[msg, chatbot, 
         model_dropdown], 
+        outputs=[msg, chatbot]
+    )
+
+    msg.submit(fn=chat_with_pdf,
+        inputs=[msg, chatbot,
+        model_dropdown],
         outputs=[msg, chatbot]
     )
 
