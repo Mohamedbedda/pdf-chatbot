@@ -37,6 +37,11 @@ def chat_with_pdf(message, history, model_key):
     Triggered when user submits a question.
     Runs full RAG pipeline and returns the answer.
     """
+    if not state.pdf_loaded or state.index is None:
+        answer = "Please upload a PDF first."
+        history.append({"role": "user", "content": message})
+        history.append({"role": "assistant", "content": answer})
+        return "", history
 
     contexts = retrieve(message, state.chunks, state.index, state.bm25)
 
