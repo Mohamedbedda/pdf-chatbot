@@ -1,23 +1,20 @@
-name: Sync to Hugging Face Space
-
+name: Sync to Hugging Face hub
 on:
   push:
     branches: [main]
+
+  # to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  sync:
+  sync-to-hub:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.0
         with:
           fetch-depth: 0
           lfs: true
-      - name: Sync to HF Space
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-          git remote add hf https://huggingface.co/spaces/Mo08/PDF-chatbot || true
-          git push hf main
+      - name: Push to hub
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_ACCES_TOKEN }}
+        run: git push https://Mo08:$HF_TOKEN@huggingface.co/spaces/Mo08/PDF-chatbot main
