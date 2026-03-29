@@ -28,14 +28,14 @@ Built with **Python · Gradio · Groq · FAISS · BM25 · BGE Reranker**
 ┌─────────────────────────────────────────────┐
 │  STAGE 1 — FAISS                            │
 │  Embed query → cosine similarity search     │
-│  Output: TOP_K = 10 similar chunks              │
-└────────────────────────────────────────────┘
+│  Output: TOP_K = 10 similar chunks          │
+└──────────────────────────────────────────── ┘
                     │
                     ▼
 ┌─────────────────────────────────────────────┐
 │  STAGE 2 — HYBRID BLEND                     │
-│  hybrid = 0.7 × FAISS + 0.3 × BM25_norm    │
-│  Output: top 7 chunks                   │
+│  hybrid = 0.7 × FAISS + 0.3 × BM25_norm     │
+│  Output: top 7 chunks                       │
 └──────────────────┬──────────────────────────┘
                    │
                    ▼
@@ -151,16 +151,8 @@ cd pdf-chatbot
 pip install -r requirements.txt
 
 # 3. Set your Groq API key
-create a .env file with: GROQ_API_KEY=your_api_key_here
+create a .env file with GROQ_API_KEY=your_api_key_here
 
 # 4. Run the app
 python app.py
 ```
-
----
-
-## 📌 Roadmap
-
-- [ ] Table extraction from PDFs
-- [ ] Multi-PDF support
-- [ ] Streaming responses
