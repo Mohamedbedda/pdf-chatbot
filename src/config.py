@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 class Settings(BaseSettings):
     load_dotenv()
     GROQ_API_KEY: str = os.environ.get("GROQ_API_KEY", "")
-    
+    ACCESS_PASSWORD: str = os.environ.get("ACCESS_PASSWORD","")
+
     GROQ_MODELS: dict[str, str] = {
         "llama-3.1-8b - Fast": "llama-3.1-8b-instant",
         "gpt-oss-20b - Reasoning": "openai/gpt-oss-20b",

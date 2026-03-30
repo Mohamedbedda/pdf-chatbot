@@ -114,4 +114,4 @@ with gr.Blocks(title="PDF RAG Chatbot") as demo:
     )
 
 if __name__ == "__main__":
-    demo.queue().launch(share=True)
+    demo.queue().launch(auth=("admin", settings.ACCESS_PASSWORD), auth_message="Please enter the access code !", share=True)
